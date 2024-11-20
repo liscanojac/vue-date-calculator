@@ -17,12 +17,9 @@ export function dateDifferenceInDays(start: string, end: string): number {
   return Math.floor((endDateUTC - startDateUTC) / MS_PER_DAY)
 }
 
-export class DateDifference {
-  start: String
-  end: String
-  private startDate: Date
-  private endDate: Date
-  private differenceInDays: number
+export class DateDifferenceBase {
+  start: String = ''
+  end: String = ''
   private MS_PER_DAY = 1000 * 60 * 60 * 24
   timeDifference: TimeDifference = {
     years: {
@@ -47,22 +44,13 @@ export class DateDifference {
     },
   }
 
-  constructor(start: string, end: string) {
-    this.start = start
-    this.end = end
-    this.startDate = this.getNewDateUTC(start)
-    this.endDate = this.getNewDateUTC(end)
-    this.differenceInDays = this.getDifferenceInDays(start, end)
-    this.timeDifference.days.total = this.differenceInDays
+  constructor() {}
+
+  getDate(dateString: string): Date {
+    return new Date(`${dateString}T00:00:00Z`)
   }
 
-  private getNewDateUTC(date: string): Date {
-    return new Date(`${date}T00:00:00Z`)
-  }
-
-  getDifferenceInDays(start: string, end: string): number {
-    const startDate = this.getNewDateUTC(start)
-    const endDate = this.getNewDateUTC(end)
+  getDifferenceInDays(startDate: Date, endDate: Date): number {
     const startDateUTC = Date.UTC(
       startDate.getUTCFullYear(),
       startDate.getUTCMonth(),
@@ -74,69 +62,97 @@ export class DateDifference {
       endDate.getUTCDate(),
     )
 
-    return Math.floor((endDateUTC - startDateUTC) / this.MS_PER_DAY)
+    this.timeDifference.days.total = Math.floor((endDateUTC - startDateUTC) / this.MS_PER_DAY)
+    return this.timeDifference.days.total
   }
 
-  getDifferenceInYears(): number {
+  getDifferenceInYears(startDate: Date, endDate: Date): number {
     let yearsDifference = 0
-    if (this.timeDifference.days.total < 365) return yearsDifference
 
-    yearsDifference = this.endDate.getUTCFullYear() - this.startDate.getUTCFullYear()
-    if (this.beforeWholeYear()) yearsDifference--
+    yearsDifference = endDate.getUTCFullYear() - startDate.getUTCFullYear()
+    if (this.beforeWholeYear(startDate, endDate)) yearsDifference--
 
     return yearsDifference
   }
 
-  getDifferenceInMonths(): number {
+  getDifferenceInMonths(startDate: Date, endDate: Date): number {
     let monthsDifference = 0
-    if (this.timeDifference.days.total < 28) return monthsDifference
+    monthsDifference = endDate.getUTCMonth() - startDate.getUTCMonth()
 
-    monthsDifference = this.endDate.getUTCMonth() - this.startDate.getUTCMonth()
-
-    if (this.beforeWholeMonth()) monthsDifference--
+    if (this.beforeWholeMonth(startDate, endDate)) monthsDifference--
     if (monthsDifference < 0) monthsDifference = monthsDifference + 12
 
-    return this.getDifferenceInYears() * 12 + monthsDifference
+    return this.getDifferenceInYears(startDate, endDate) * 12 + monthsDifference
   }
 
-  private beforeWholeYear(): boolean {
+  private beforeWholeYear(startDate: Date, endDate: Date): boolean {
     return (
-      this.endDate.getUTCMonth() < this.startDate.getUTCMonth() ||
-      (this.endDate.getUTCMonth() === this.startDate.getUTCMonth() &&
-        this.endDate.getUTCDate() < this.startDate.getUTCDate())
+      endDate.getUTCMonth() < startDate.getUTCMonth() ||
+      (endDate.getUTCMonth() === startDate.getUTCMonth() &&
+        endDate.getUTCDate() < startDate.getUTCDate())
     )
   }
 
-  private beforeWholeMonth(): boolean {
-    return this.endDate.getUTCDate() < this.startDate.getUTCDate()
+  private beforeWholeMonth(startDate: Date, endDate: Date): boolean {
+    return endDate.getUTCDate() < startDate.getUTCDate()
   }
 
   private isLeapYear(year: number): boolean {
     return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0
   }
 
-  addMonths(date: Date, months: number): Date {
-    return new Date(date.setMonth(date.getUTCMonth() + months))
+  private formatUTCDate(dateToFormat: Date): string {
+    const year = dateToFormat.getUTCFullYear()
+    const month = (dateToFormat.getUTCMonth() + 1).toString().padStart(2, '0')
+    const day = dateToFormat.getUTCDate().toString().padStart(2, '0')
+    return `${year}-${month}-${day}`
   }
 
-  addMonths2(date: Date, months: number): Date {
-    const newDate = new Date(date)
-    const originalDate = date.getUTCDate()
+  private isLeapDay(dateToAnalise: Date): boolean {
+    return dateToAnalise.getUTCMonth() === 1 && dateToAnalise.getUTCDate() === 29
+  }
+
+  addMonths(dateToAdd: Date, months: number): Date {
+    const newDate = new Date(
+      Date.UTC(dateToAdd.getUTCFullYear(), dateToAdd.getUTCMonth(), dateToAdd.getUTCDate()),
+    )
+    const originalDate = dateToAdd.getUTCDate()
     newDate.setUTCDate(1)
     newDate.setUTCMonth(newDate.getUTCMonth() + months)
     if (originalDate > 28) {
       const newDateMonthLength = this.getMonthLength(newDate)
+      if (originalDate > newDateMonthLength) newDate.setUTCDate(newDateMonthLength)
       originalDate > newDateMonthLength
         ? newDate.setUTCDate(newDateMonthLength)
         : newDate.setUTCDate(originalDate)
+
+      return newDate
     }
+    newDate.setUTCDate(originalDate)
+
     return newDate
   }
 
-  private getMonthLength(date: Date): number {
+  addYears(dateToAdd: Date, years: number): Date {
+    const newDate = new Date(
+      Date.UTC(dateToAdd.getUTCFullYear(), dateToAdd.getUTCMonth(), dateToAdd.getUTCDate()),
+    )
+    if (this.isLeapDay(dateToAdd)) {
+      newDate.setUTCDate(1)
+      newDate.setUTCFullYear(newDate.getUTCFullYear() + years)
+      this.isLeapYear(newDate.getUTCFullYear()) ? newDate.setUTCDate(29) : newDate.setUTCDate(28)
+
+      return newDate
+    }
+    newDate.setUTCFullYear(newDate.getUTCFullYear() + years)
+
+    return newDate
+  }
+
+  private getMonthLength(dateToGetMonth: Date): number {
     return [
       31,
-      this.isLeapYear(date.getUTCFullYear()) ? 29 : 28,
+      this.isLeapYear(dateToGetMonth.getUTCFullYear()) ? 29 : 28,
       31,
       30,
       31,
@@ -147,9 +163,13 @@ export class DateDifference {
       31,
       30,
       31,
-    ][date.getUTCMonth()]
+    ][dateToGetMonth.getUTCMonth()]
   }
-  calculate(options: DateOptions) {
-    if (options.years.months_days || options.years.weeks_days) this.getDifferenceInYears()
+  calculate(start: string, end: string, options: DateOptions) {
+    const startDate = this.getDate(start)
+    const endDate = this.getDate(end)
+    // if (options.years.months_days || options.years.weeks_days) this.getDifferenceInYears(start, end)
   }
 }
+
+class DateDifference extends DateDifferenceBase {}
