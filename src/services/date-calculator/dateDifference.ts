@@ -51,3 +51,5 @@ export class DateDifference extends DateDifferenceBase {
     return timeDifference
   }
 }
+
+export const dateCalculator = new DateDifference()
