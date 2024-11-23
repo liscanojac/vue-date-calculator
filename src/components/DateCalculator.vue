@@ -1,35 +1,33 @@
 <template>
   <div>
     <DateDifferenceDisplay :date-difference="dateDifference" :date-options="dateOptions" />
-    <DateInput v-model:date-model="startDate" input-date-label="Start Date" />
-    <DateInput v-model:date-model="endDate" :min-date="startDate" input-date-label="End Date" />
-    <OptionsPanel :date-options="dateOptions" @update:date-options="updateDateOptions" />
+    <DatePicker v-model:date-model="startDate" :max-date="endDate" />
+    <DatePicker v-model:date-model="endDate" :min-date="startDate" />
     <button type="button" @click="getDateDifference" :disabled="bothDatesEmpty">Calculate</button>
-    <br />
-    <input type="date" name="" id="" />
+    <OptionsPanel :date-options="dateOptions" @update:date-options="updateDateOptions" />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { dateCalculator } from '@/services/date-calculator/dateDifference'
-import DateInput from './DateInput.vue'
-import OptionsPanel from './OptionsPanel.vue'
 import type { DateOptions } from '@/interfaces/date-calculator'
+import { dateCalculator } from '@/services/date-calculator/dateDifference'
+import OptionsPanel from './OptionsPanel.vue'
 import DateDifferenceDisplay from './DateDifferenceDisplay.vue'
+import DatePicker from './DatePicker.vue'
 
 export default defineComponent({
   name: 'DateCalculatorComponent',
   components: {
-    DateInput,
     OptionsPanel,
     DateDifferenceDisplay,
+    DatePicker,
   },
   props: {},
   data() {
     return {
-      startDate: '',
-      endDate: '',
+      startDate: undefined as Date | undefined,
+      endDate: undefined as Date | undefined,
       dateDifference: {
         y_m_d: '',
         m_d: '',
@@ -45,18 +43,20 @@ export default defineComponent({
     }
   },
   computed: {
-    bothDatesEmpty() {
-      return this.startDate === '' && this.endDate === ''
+    bothDatesEmpty(): boolean {
+      return !this.startDate && !this.endDate
     },
   },
 
   methods: {
     getDateDifference() {
-      this.dateDifference = dateCalculator.getTimeDifference(
-        this.startDate,
-        this.endDate,
-        this.dateOptions,
-      )
+      if (this.startDate && this.endDate) {
+        this.dateDifference = dateCalculator.getTimeDifference(
+          this.startDate,
+          this.endDate,
+          this.dateOptions,
+        )
+      }
     },
     updateDateOptions(dateOptionsUpdated: DateOptions) {
       this.dateOptions = dateOptionsUpdated
