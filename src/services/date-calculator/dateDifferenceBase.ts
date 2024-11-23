@@ -65,8 +65,10 @@ export class DateDifferenceBase {
     ],
   }
 
-  getDate(dateString: string): Date {
-    return new Date(`${dateString}T00:00:00Z`)
+  getDate(dateString: Date | string): Date {
+    const newDate = new Date(dateString)
+
+    return new Date(Date.UTC(newDate.getUTCFullYear(), newDate.getUTCMonth(), newDate.getUTCDate()))
   }
 
   private getMonthLength(dateToGetMonth: Date): number {

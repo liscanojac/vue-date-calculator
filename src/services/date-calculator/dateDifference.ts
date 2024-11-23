@@ -18,7 +18,7 @@ export class DateDifference extends DateDifferenceBase {
       `${this.timeDifference.weeks.total} weeks and ${this.timeDifference.weeks.days} days`,
   }
 
-  private setTimeDifference(start: string, end: string, options: DateOptions) {
+  private setTimeDifference(start: Date | string, end: Date | string, options: DateOptions) {
     const startDate = this.getDate(start)
     const endDate = this.getDate(end)
     for (const dateOption in options) {
@@ -38,7 +38,11 @@ export class DateDifference extends DateDifferenceBase {
     }
   }
 
-  getTimeDifference(start: string, end: string, options: DateOptions): DateDifferenceObject {
+  getTimeDifference(
+    start: string | Date,
+    end: string | Date,
+    options: DateOptions,
+  ): DateDifferenceObject {
     this.setTimeDifference(start, end, options)
 
     const timeDifference: DateDifferenceObject = {
