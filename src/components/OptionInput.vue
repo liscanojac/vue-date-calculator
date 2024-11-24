@@ -1,21 +1,19 @@
 <template>
   <div>
-    <input
-      type="checkbox"
-      :name="inputName"
-      :id="inputName"
-      :checked="optionModel"
-      @input="$emit('update:optionModel', ($event.target as HTMLInputElement).checked)"
-    />
-    <label :for="inputName">{{ inputLabel }}</label>
+    <Toggle :model-value="optionModel" @update:model-value="$emit('update:optionModel', $event)" />
+    <label>{{ inputLabel }}</label>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import Toggle from '@vueform/toggle'
 
 export default defineComponent({
   name: 'OptionInputComponent',
+  components: {
+    Toggle,
+  },
   props: {
     optionModel: {
       type: Boolean,
@@ -25,15 +23,9 @@ export default defineComponent({
       type: String,
       required: true,
     },
-    inputName: {
-      type: String,
-      required: true,
-    },
   },
   emits: ['update:optionModel'],
 })
 </script>
 
-<style scoped>
-/* Add your styles here */
-</style>
+<style src="@vueform/toggle/themes/default.css"></style>
