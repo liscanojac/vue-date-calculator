@@ -1,10 +1,10 @@
 <template>
   <div>
+    <h2>Options</h2>
     <div v-for="(option, optionKey) in dateOptions" :key="optionKey">
       <OptionInput
         :option-model="option"
         :input-label="dateOptionLabels[optionKey]"
-        :input-name="optionKey"
         @update:option-model="updateOption(optionKey, $event)"
       />
     </div>
@@ -39,8 +39,7 @@ export default defineComponent({
   },
   methods: {
     updateOption(key: keyof DateOptions, value: boolean) {
-      const updatedOptions = { ...this.dateOptions, [key]: value }
-      this.$emit('update:dateOptions', updatedOptions)
+      this.$emit('update:dateOptions', key, value)
     },
   },
   emits: ['update:dateOptions'],
