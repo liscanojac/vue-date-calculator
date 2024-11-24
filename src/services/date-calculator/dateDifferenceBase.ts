@@ -143,7 +143,7 @@ export class DateDifferenceBase {
     return dateToAnalise.getUTCMonth() === 1 && dateToAnalise.getUTCDate() === 29
   }
 
-  private formatUTCDate(dateToFormat: Date): string {
+  protected formatUTCDate(dateToFormat: Date): string {
     const year = dateToFormat.getUTCFullYear()
     const month = (dateToFormat.getUTCMonth() + 1).toString().padStart(2, '0')
     const day = dateToFormat.getUTCDate().toString().padStart(2, '0')
@@ -185,5 +185,30 @@ export class DateDifferenceBase {
     newDate.setUTCFullYear(newDate.getUTCFullYear() + years)
 
     return newDate
+  }
+
+  protected resetTimeDifference() {
+    this.timeDifference = {
+      years: {
+        total: 0,
+        months: 0,
+        months_days: 0,
+        weeks: 0,
+        weeks_days: 0,
+      },
+      months: {
+        total: 0,
+        weeks: 0,
+        weeks_days: 0,
+        days: 0,
+      },
+      weeks: {
+        total: 0,
+        days: 0,
+      },
+      days: {
+        total: 0,
+      },
+    }
   }
 }
