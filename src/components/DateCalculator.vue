@@ -58,8 +58,14 @@ export default defineComponent({
         )
       }
     },
-    updateDateOptions(dateOptionsUpdated: DateOptions) {
-      this.dateOptions = dateOptionsUpdated
+    dateDisplayEmpty(): boolean {
+      return Object.values(this.dateDifference).join('') === ''
+    },
+    updateDateOptions(key: keyof DateOptions, value: boolean) {
+      this.dateOptions = { ...this.dateOptions, [key]: value }
+      if (!this.dateDisplayEmpty()) {
+        this.getDateDifference()
+      }
     },
   },
 })
