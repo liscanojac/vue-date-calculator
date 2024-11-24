@@ -1,6 +1,8 @@
 <template>
-  <div v-for="(difference, differenceKey) in dateDifference" :key="differenceKey">
-    <p v-if="dateOptions[differenceKey]">{{ difference || '\u200B' }}</p>
+  <div class="container">
+    <div v-for="(difference, differenceKey) in dateDifference" :key="differenceKey">
+      <p v-if="dateOptions[differenceKey]">{{ difference || '\u200B' }}</p>
+    </div>
   </div>
 </template>
 
@@ -24,5 +26,9 @@ export default defineComponent({
 </script>
 
 <style scoped>
-/* Add your styles here */
+.container {
+  min-height: 6rem;
+  display: flex;
+  flex-direction: column;
+}
 </style>
