@@ -1,16 +1,18 @@
 <template>
-  <div>
+  <div class="my-2">
     <VueDatePicker
       :model-value="dateModel"
-      @update:model-value="$emit('update:dateModel', $event)"
+      @update:model-value="handleModelUpdate"
       :min-date="minDate"
       :max-date="maxDate"
+      :disabled-dates="disablePickingSameDate"
       :year-range="yearLimits"
       :format="formatDate"
       :enable-time-picker="false"
       :text-input="textInputOptions"
       :placeholder="placeholder"
-      utc
+      :required="required"
+      :utc="true"
       auto-apply
       esc-close
       vertical
@@ -22,6 +24,7 @@
 import { defineComponent } from 'vue'
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
+import { dateCalculator } from '@/services/date-calculator/dateDifference'
 
 export default defineComponent({
   name: 'DatePickerComponent',
@@ -34,16 +37,20 @@ export default defineComponent({
       default: 'Select Date',
     },
     minDate: {
-      type: Date,
-      default: undefined,
+      type: String,
+      default: '',
     },
     maxDate: {
-      type: Date,
-      default: undefined,
+      type: String,
+      default: '',
     },
     dateModel: {
-      type: Date,
-      default: undefined,
+      type: String,
+      default: '',
+    },
+    required: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {
@@ -56,11 +63,22 @@ export default defineComponent({
     }
   },
   methods: {
-    formatDate(date: Date) {
+    formatDate(dateToFormat: string) {
+      const date = dateCalculator.getDate(dateToFormat)
       const day = date.getUTCDate()
       const month = date.getUTCMonth() + 1
       const year = date.getUTCFullYear()
       return `${day < 10 ? '0' + day : day}/${month < 10 ? '0' + month : month}/${year}`
+    },
+    handleModelUpdate(value: string | null) {
+      this.$emit('update:dateModel', value === null ? '' : value)
+    },
+  },
+  computed: {
+    disablePickingSameDate(): string[] {
+      const datesToDisable = [this.minDate, this.maxDate]
+
+      return datesToDisable.filter((date) => date)
     },
   },
   emits: ['update:dateModel'],
