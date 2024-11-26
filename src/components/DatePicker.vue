@@ -52,6 +52,10 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    pickingSameDate: {
+      type: Boolean,
+      default: true,
+    },
   },
   data() {
     return {
@@ -75,10 +79,10 @@ export default defineComponent({
     },
   },
   computed: {
-    disablePickingSameDate(): string[] {
+    disablePickingSameDate(): Array<string> {
       const datesToDisable = [this.minDate, this.maxDate]
 
-      return datesToDisable.filter((date) => date)
+      return this.pickingSameDate ? [] : datesToDisable.filter((date) => date)
     },
   },
   emits: ['update:dateModel'],
