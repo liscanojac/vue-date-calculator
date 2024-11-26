@@ -71,7 +71,7 @@ export class DateDifference extends DateDifferenceBase {
     }
   }
 
-  getTimeDifference(start: Date, end: Date, options: DateOptions): DateDifferenceObject {
+  getTimeDifference(start: string, end: string, options: DateOptions): DateDifferenceObject {
     const startDate = this.getDate(start)
     const endDate = this.getDate(end)
     this.setTimeDifference(startDate, endDate, options)

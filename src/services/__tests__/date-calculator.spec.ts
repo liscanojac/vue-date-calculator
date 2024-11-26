@@ -337,52 +337,32 @@ describe('testing getTimeDifference method', () => {
   })
 
   it('should calculate correctly from 1987-11-08 to 2024-11-20', () => {
-    const testDateDiff = dateCalculator.getTimeDifference(
-      dateCalculator.getDate('1987-11-08'),
-      dateCalculator.getDate('2024-11-20'),
-      testOptions,
-    )
+    const testDateDiff = dateCalculator.getTimeDifference('1987-11-08', '2024-11-20', testOptions)
 
     expect(testDateDiff.y_m_d).toBe('37 years 0 months and 12 days')
   })
 
   it('should calculate correctly from 1957-03-06 to 2024-11-20', () => {
-    const testDateDiff = dateCalculator.getTimeDifference(
-      dateCalculator.getDate('1957-03-06'),
-      dateCalculator.getDate('2024-11-20'),
-      testOptions,
-    )
+    const testDateDiff = dateCalculator.getTimeDifference('1957-03-06', '2024-11-20', testOptions)
 
     expect(testDateDiff.y_m_d).toBe('67 years 8 months and 14 days')
   })
 
   it('should calculate correctly from 1957-03-06 to 2024-11-20', () => {
-    const testDateDiff = dateCalculator.getTimeDifference(
-      dateCalculator.getDate('1957-03-06'),
-      dateCalculator.getDate('2024-11-20'),
-      testOptions,
-    )
+    const testDateDiff = dateCalculator.getTimeDifference('1957-03-06', '2024-11-20', testOptions)
 
     expect(testDateDiff.m_d).toBe('812 months and 14 days')
   })
 
   it('should calculate correctly from 1997-05-08 to 2024-11-20', () => {
-    const testDateDiff = dateCalculator.getTimeDifference(
-      dateCalculator.getDate('1997-05-08'),
-      dateCalculator.getDate('2024-11-20'),
-      testOptions,
-    )
+    const testDateDiff = dateCalculator.getTimeDifference('1997-05-08', '2024-11-20', testOptions)
 
     expect(testDateDiff.d).toBe('10058 days')
   })
 
   it('should return an empty string', () => {
     testOptions.w_d = false
-    const testDateDiff = dateCalculator.getTimeDifference(
-      dateCalculator.getDate('1997-05-08'),
-      dateCalculator.getDate('2024-11-20'),
-      testOptions,
-    )
+    const testDateDiff = dateCalculator.getTimeDifference('1997-05-08', '2024-11-20', testOptions)
 
     expect(testDateDiff.w_d).toBe('')
   })
