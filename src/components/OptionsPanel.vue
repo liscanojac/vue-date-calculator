@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>Options</h2>
+    <h2 class="text-xl font-medium m-1 mb-2">Options</h2>
     <div v-for="(option, optionKey) in dateOptions" :key="optionKey">
       <OptionInput
         :option-model="option"
@@ -46,6 +46,4 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
-/* Add your styles here */
-</style>
+<style scoped></style>
