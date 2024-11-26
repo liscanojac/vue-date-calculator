@@ -1,9 +1,34 @@
 <template>
-  <div>
-    <DateDifferenceDisplay :date-difference="dateDifference" :date-options="dateOptions" />
-    <DatePicker v-model:date-model="startDate" :max-date="endDate" />
-    <DatePicker v-model:date-model="endDate" :min-date="startDate" />
-    <button type="button" @click="getDateDifference" :disabled="bothDatesEmpty">Calculate</button>
+  <div class="text-dark-blue">
+    <DateDifferenceDisplay
+      :start-date="startDate"
+      :end-date="endDate"
+      :date-difference="dateDifference"
+      :date-options="dateOptions"
+    />
+    <form action="submit" class="flex flex-col px-1" @submit.prevent="getDateDifference">
+      <DatePicker
+        v-model:date-model="startDate"
+        :max-date="endDate"
+        placeholder="Select Start Date"
+        :required="true"
+        :picking-same-date="false"
+      />
+      <DatePicker
+        v-model:date-model="endDate"
+        :min-date="startDate"
+        placeholder="Select End Date"
+        :required="true"
+        :picking-same-date="false"
+      />
+      <button
+        type="submit"
+        class="text-white bg-primary-mint hover:bg-primary-green focus:ring-4 focus:ring-primary-green font-medium rounded-lg text-lg px-5 py-2.5 my-2 disabled:bg-primary-blue disabled:cursor-not-allowed"
+        :disabled="bothDatesEmpty"
+      >
+        Calculate
+      </button>
+    </form>
     <OptionsPanel :date-options="dateOptions" @update:date-options="updateDateOptions" />
   </div>
 </template>
@@ -26,8 +51,8 @@ export default defineComponent({
   props: {},
   data() {
     return {
-      startDate: undefined as Date | undefined,
-      endDate: undefined as Date | undefined,
+      startDate: '',
+      endDate: '',
       dateDifference: {
         y_m_d: '',
         m_d: '',
@@ -46,11 +71,21 @@ export default defineComponent({
     bothDatesEmpty(): boolean {
       return !this.startDate && !this.endDate
     },
+    btnEnabled(): boolean {
+      return (
+        !!this.startDate &&
+        !!this.endDate &&
+        (this.dateOptions.d ||
+          this.dateOptions.m_d ||
+          this.dateOptions.w_d ||
+          this.dateOptions.y_m_d)
+      )
+    },
   },
 
   methods: {
     getDateDifference() {
-      if (this.startDate && this.endDate) {
+      if (!!this.startDate && !!this.endDate) {
         this.dateDifference = dateCalculator.getTimeDifference(
           this.startDate,
           this.endDate,
