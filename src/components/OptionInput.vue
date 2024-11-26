@@ -1,7 +1,11 @@
 <template>
-  <div>
-    <Toggle :model-value="optionModel" @update:model-value="$emit('update:optionModel', $event)" />
-    <label>{{ inputLabel }}</label>
+  <div class="my-1">
+    <Toggle
+      :classes="toggleClasses"
+      :model-value="optionModel"
+      @update:model-value="$emit('update:optionModel', $event)"
+    />
+    <label class="ml-2">{{ inputLabel }}</label>
   </div>
 </template>
 
@@ -24,8 +28,30 @@ export default defineComponent({
       required: true,
     },
   },
+  data() {
+    return {
+      toggleClasses: {
+        container:
+          'inline-block rounded-full outline-none focus:ring focus:ring-light-mint focus:ring-opacity-30',
+        toggle:
+          'flex w-12 h-5 rounded-full relative cursor-pointer transition items-center box-content border-2 text-xs leading-none',
+        toggleOn: 'bg-primary-mint border-primary-mint',
+        toggleOff: 'bg-gray-200 border-gray-200 justify-end text-gray-700',
+        toggleOnDisabled:
+          'bg-gray-300 border-gray-300 justify-start text-gray-400 cursor-not-allowed',
+        toggleOffDisabled:
+          'bg-gray-200 border-gray-200 justify-end text-gray-400 cursor-not-allowed',
+        handle: 'inline-block bg-white w-5 h-5 top-0 rounded-full absolute transition-all',
+        handleOn: 'left-full transform -translate-x-full',
+        handleOff: 'left-0',
+        handleOnDisabled: 'bg-gray-100 left-full transform -translate-x-full',
+        handleOffDisabled: 'bg-gray-100 left-0',
+        label: 'text-center w-8 border-box whitespace-nowrap select-none',
+      },
+    }
+  },
   emits: ['update:optionModel'],
 })
 </script>
 
-<style src="@vueform/toggle/themes/default.css"></style>
+<style scoped></style>
