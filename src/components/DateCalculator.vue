@@ -2,8 +2,8 @@
   <div class="flex justify-center items-center w-full px-4">
     <div class="w-full md:w-1/3">
       <DateDifferenceDisplay
-        :start-date="startDate"
-        :end-date="endDate"
+        :start-date="startDateCalculated"
+        :end-date="endDateCalculated"
         :date-difference="dateDifference"
         :date-options="dateOptions"
       />
@@ -62,6 +62,8 @@ export default defineComponent({
     return {
       startDate: '',
       endDate: '',
+      startDateCalculated: '',
+      endDateCalculated: '',
       dateDifference: {
         y_m_d: '',
         m_d: '',
@@ -97,6 +99,8 @@ export default defineComponent({
           this.endDate,
           this.dateOptions,
         )
+        this.startDateCalculated = this.startDate
+        this.endDateCalculated = this.endDate
       }
     },
     dateDisplayEmpty(): boolean {
