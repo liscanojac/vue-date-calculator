@@ -21,6 +21,7 @@
 
 body {
   height: 100vh;
+  max-height: 100vh;
   color: var(--dark-blue);
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
