@@ -1,13 +1,18 @@
 <template>
   <div>
-    <h2 class="text-xl font-medium m-1 mb-2">Options</h2>
-    <div v-for="(option, optionKey) in dateOptions" :key="optionKey">
-      <OptionInput
-        :option-model="option"
-        :input-label="dateOptionLabels[optionKey]"
-        @update:option-model="updateOption(optionKey, $event)"
-      />
+    <h2 class="text-xl font-medium mx-1">Options</h2>
+    <div class="my-2">
+      <div class="" v-for="(option, optionKey) in dateOptions" :key="optionKey">
+        <OptionInput
+          :option-model="option"
+          :input-label="dateOptionLabels[optionKey]"
+          @update:option-model="updateOption(optionKey, $event)"
+        />
+      </div>
     </div>
+    <p v-if="noOptionSelected" class="text-xs mx-1 text-red-600">
+      Please select an option to calculate
+    </p>
   </div>
 </template>
 
@@ -36,6 +41,16 @@ export default defineComponent({
         d: 'Days',
       } as DateDifferenceObject,
     }
+  },
+  computed: {
+    noOptionSelected() {
+      return (
+        !this.dateOptions.d &&
+        !this.dateOptions.m_d &&
+        !this.dateOptions.w_d &&
+        !this.dateOptions.y_m_d
+      )
+    },
   },
   methods: {
     updateOption(key: keyof DateOptions, value: boolean) {
