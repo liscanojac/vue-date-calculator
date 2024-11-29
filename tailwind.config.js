@@ -4,11 +4,14 @@ export default {
   theme: {
     extend: {
       colors: {
-        'primary-green': '#318760',
-        'primary-mint': '#42b883',
-        'light-mint': '#78cea8',
-        'primary-blue': '#6185a8',
-        'dark-blue': '#34495e',
+        'primary-green': 'var(--primary-green)',
+        'primary-mint': 'var(--primary-mint)',
+        'light-mint': 'var(--light-mint)',
+        'light-blue': 'var(--light-blue)',
+        'primary-blue': 'var(--primary-blue)',
+        'dark-blue': 'var(--dark-blue)',
+        celadon: 'var(--celadon)',
+        charcoal: 'var(--charcoal)',
       },
     },
   },
