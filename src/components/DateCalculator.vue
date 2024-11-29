@@ -1,35 +1,39 @@
 <template>
-  <div class="text-dark-blue">
-    <DateDifferenceDisplay
-      :start-date="startDate"
-      :end-date="endDate"
-      :date-difference="dateDifference"
-      :date-options="dateOptions"
-    />
-    <form action="submit" class="flex flex-col px-1" @submit.prevent="getDateDifference">
-      <DatePicker
-        v-model:date-model="startDate"
-        :max-date="endDate"
-        placeholder="Select Start Date"
-        :required="true"
-        :picking-same-date="false"
+  <div class="flex justify-center items-center w-full px-4">
+    <div class="w-full md:w-1/3">
+      <DateDifferenceDisplay
+        :start-date="startDate"
+        :end-date="endDate"
+        :date-difference="dateDifference"
+        :date-options="dateOptions"
       />
-      <DatePicker
-        v-model:date-model="endDate"
-        :min-date="startDate"
-        placeholder="Select End Date"
-        :required="true"
-        :picking-same-date="false"
-      />
-      <button
-        type="submit"
-        class="text-white bg-primary-mint hover:bg-primary-green focus:ring-4 focus:ring-primary-green font-medium rounded-lg text-lg px-5 py-2.5 my-2 disabled:bg-primary-blue disabled:cursor-not-allowed"
-        :disabled="bothDatesEmpty"
-      >
-        Calculate
-      </button>
-    </form>
-    <OptionsPanel :date-options="dateOptions" @update:date-options="updateDateOptions" />
+      <form action="submit" class="flex flex-col px-1" @submit.prevent="getDateDifference">
+        <DatePicker
+          v-model:date-model="startDate"
+          :max-date="endDate"
+          placeholder="Select Start Date"
+          :required="true"
+          :picking-same-date="false"
+          :dark-mode="darkMode"
+        />
+        <DatePicker
+          v-model:date-model="endDate"
+          :min-date="startDate"
+          placeholder="Select End Date"
+          :required="true"
+          :picking-same-date="false"
+          :dark-mode="darkMode"
+        />
+        <button
+          type="submit"
+          class="text-white bg-primary-mint hover:bg-primary-green focus:ring-4 focus:ring-primary-green font-medium rounded-lg text-lg px-5 py-2.5 my-2 disabled:bg-celadon disabled:cursor-not-allowed"
+          :disabled="!btnEnabled"
+        >
+          Calculate
+        </button>
+      </form>
+      <OptionsPanel :date-options="dateOptions" @update:date-options="updateDateOptions" />
+    </div>
   </div>
 </template>
 
@@ -48,7 +52,12 @@ export default defineComponent({
     DateDifferenceDisplay,
     DatePicker,
   },
-  props: {},
+  props: {
+    darkMode: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data() {
     return {
       startDate: '',
@@ -68,9 +77,6 @@ export default defineComponent({
     }
   },
   computed: {
-    bothDatesEmpty(): boolean {
-      return !this.startDate && !this.endDate
-    },
     btnEnabled(): boolean {
       return (
         !!this.startDate &&
@@ -85,7 +91,7 @@ export default defineComponent({
 
   methods: {
     getDateDifference() {
-      if (!!this.startDate && !!this.endDate) {
+      if (this.btnEnabled) {
         this.dateDifference = dateCalculator.getTimeDifference(
           this.startDate,
           this.endDate,
@@ -105,7 +111,3 @@ export default defineComponent({
   },
 })
 </script>
-
-<style scoped>
-/* Add your styles here */
-</style>
