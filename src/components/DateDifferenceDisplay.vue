@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-36 flex flex-col">
+  <div class="min-h-40 flex flex-col">
     <h2 class="text-xl font-medium my-1 ml-2">{{ getDateLapse() }}</h2>
     <div class="ml-4">
       <div v-for="(difference, differenceKey) in dateDifference" :key="differenceKey">
