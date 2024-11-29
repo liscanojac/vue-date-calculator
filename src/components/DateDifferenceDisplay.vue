@@ -1,9 +1,11 @@
 <template>
-  <div class="container">
-    <h2 class="text-xl font-medium my-1">{{ getDateLapse() }}</h2>
-    <div class="ml-2">
+  <div class="min-h-36 flex flex-col">
+    <h2 class="text-xl font-medium my-1 ml-2">{{ getDateLapse() }}</h2>
+    <div class="ml-4">
       <div v-for="(difference, differenceKey) in dateDifference" :key="differenceKey">
-        <p v-if="dateOptions[differenceKey]">{{ difference || '\u200B' }}</p>
+        <p v-if="dateOptions[differenceKey] && !!startDate && !!endDate">
+          {{ difference }}
+        </p>
       </div>
     </div>
   </div>
@@ -62,11 +64,3 @@ export default defineComponent({
   },
 })
 </script>
-
-<style scoped>
-.container {
-  min-height: 8rem;
-  display: flex;
-  flex-direction: column;
-}
-</style>
