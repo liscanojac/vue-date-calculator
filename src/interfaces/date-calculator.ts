@@ -21,11 +21,30 @@ export interface TimeDifference {
   }
 }
 
-export type DateOptions = {
+export interface DateOptions {
   y_m_d: boolean
   m_d: boolean
   d: boolean
   w_d: boolean
+}
+
+export interface TimeTravelOptionsBase {
+  years: number
+  months: number
+  weeks: number
+  days: number
+}
+
+type TimeTravelMethod = (dateToAdd: Date, n: number) => Date
+export interface TimeTravelMethods {
+  years: TimeTravelMethod
+  months: TimeTravelMethod
+  weeks: TimeTravelMethod
+  days: TimeTravelMethod
+}
+
+export interface TimeTravelOptions extends TimeTravelOptionsBase {
+  past: boolean
 }
 
 export type DateOptionKey = 'y_m_d' | 'm_d' | 'w_d' | 'd'
