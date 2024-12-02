@@ -1,4 +1,8 @@
-import type { TimeDifference, TimeDifferenceMethods } from '@/interfaces/date-calculator'
+import type {
+  TimeDifference,
+  TimeDifferenceMethods,
+  TimeTravelMethods,
+} from '@/interfaces/date-calculator'
 
 export class DateDifferenceBase {
   #MS_PER_DAY = 1000 * 60 * 60 * 24
@@ -65,6 +69,13 @@ export class DateDifferenceBase {
     ],
   }
 
+  protected timeTravelMethods: TimeTravelMethods = {
+    years: this.addYears.bind(this),
+    months: this.addMonths.bind(this),
+    weeks: this.addWeeks.bind(this),
+    days: this.addDays.bind(this),
+  }
+
   getDate(dateString: Date | string): Date {
     const newDate = new Date(dateString)
 
@@ -104,15 +115,6 @@ export class DateDifferenceBase {
     return this.timeDifference.days.total
   }
 
-  getDifferenceInYears(startDate: Date, endDate: Date): number {
-    let yearsDifference = 0
-
-    yearsDifference = endDate.getUTCFullYear() - startDate.getUTCFullYear()
-    if (this.beforeWholeYear(startDate, endDate)) yearsDifference--
-
-    return yearsDifference
-  }
-
   getDifferenceInMonths(startDate: Date, endDate: Date): number {
     let monthsDifference = 0
     monthsDifference = endDate.getUTCMonth() - startDate.getUTCMonth()
@@ -121,6 +123,15 @@ export class DateDifferenceBase {
     if (monthsDifference < 0) monthsDifference = monthsDifference + 12
 
     return this.getDifferenceInYears(startDate, endDate) * 12 + monthsDifference
+  }
+
+  getDifferenceInYears(startDate: Date, endDate: Date): number {
+    let yearsDifference = 0
+
+    yearsDifference = endDate.getUTCFullYear() - startDate.getUTCFullYear()
+    if (this.beforeWholeYear(startDate, endDate)) yearsDifference--
+
+    return yearsDifference
   }
 
   private beforeWholeYear(startDate: Date, endDate: Date): boolean {
@@ -148,6 +159,19 @@ export class DateDifferenceBase {
     const month = (dateToFormat.getUTCMonth() + 1).toString().padStart(2, '0')
     const day = dateToFormat.getUTCDate().toString().padStart(2, '0')
     return `${year}-${month}-${day}`
+  }
+
+  addDays(dateToAdd: Date, days: number): Date {
+    const newDate = new Date(
+      Date.UTC(dateToAdd.getUTCFullYear(), dateToAdd.getUTCMonth(), dateToAdd.getUTCDate()),
+    )
+    newDate.setUTCDate(newDate.getUTCDate() + days)
+
+    return newDate
+  }
+
+  addWeeks(dateToAdd: Date, weeks: number): Date {
+    return this.addDays(dateToAdd, weeks * 7)
   }
 
   addMonths(dateToAdd: Date, months: number): Date {
