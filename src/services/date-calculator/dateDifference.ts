@@ -3,6 +3,9 @@ import type {
   DateOptions,
   formatTimeMethods,
   DateDifferenceObject,
+  TimeTravelOptions,
+  TimeTravelOptionsBase,
+  TimeTravelMethods,
 } from '@/interfaces/date-calculator'
 
 import { DateDifferenceBase } from './dateDifferenceBase'
@@ -85,6 +88,29 @@ export class DateDifference extends DateDifferenceBase {
     this.setDates(startDate, endDate)
     this.setOptionsCalculated(options)
     return timeDifference
+  }
+
+  getTimeTravelDate(start: string, timeTravelOptions: TimeTravelOptions): string {
+    const timeOptions: TimeTravelOptionsBase = {
+      years: timeTravelOptions.years,
+      months: timeTravelOptions.months,
+      weeks: timeTravelOptions.weeks,
+      days: timeTravelOptions.days,
+    }
+    let newDate = this.getDate(start)
+
+    for (const timeOption in timeOptions) {
+      if (timeOptions[timeOption as keyof TimeTravelOptionsBase]) {
+        const timeToTravel =
+          timeOptions[timeOption as keyof TimeTravelOptionsBase] * (timeTravelOptions.past ? -1 : 1)
+
+        newDate = this.timeTravelMethods[timeOption as keyof TimeTravelMethods](
+          newDate,
+          timeToTravel,
+        )
+      }
+    }
+    return this.formatUTCDate(newDate)
   }
 }
 
