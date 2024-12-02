@@ -320,6 +320,38 @@ describe('testing addYears method', () => {
   })
 })
 
+describe('testing addDays method', () => {
+  it('should return Mar 10, 2025', () => {
+    expect(dateCalculatorBase.addDays(dateCalculatorBase.getDate('2024-11-30'), 100)).toEqual(
+      dateCalculatorBase.getDate('2025-03-10'),
+    )
+  })
+
+  it('should return Feb 28, 2025', () => {
+    expect(dateCalculatorBase.addDays(dateCalculatorBase.getDate('2024-02-29'), 365)).toEqual(
+      dateCalculatorBase.getDate('2025-02-28'),
+    )
+  })
+
+  it('should return Mar 01, 2025', () => {
+    expect(dateCalculatorBase.addDays(dateCalculatorBase.getDate('2024-02-29'), 366)).toEqual(
+      dateCalculatorBase.getDate('2025-03-01'),
+    )
+  })
+
+  it('should return Feb 29, 2024', () => {
+    expect(dateCalculatorBase.addDays(dateCalculatorBase.getDate('2020-02-29'), 1461)).toEqual(
+      dateCalculatorBase.getDate('2024-02-29'),
+    )
+  })
+
+  it('should return Nov 08, 2024', () => {
+    expect(dateCalculatorBase.addDays(dateCalculatorBase.getDate('2020-01-23'), 1751)).toEqual(
+      dateCalculatorBase.getDate('2024-11-08'),
+    )
+  })
+})
+
 describe('testing getTimeDifference method', () => {
   const dateCalculator = new DateDifference()
   const testOptions = {
@@ -365,5 +397,33 @@ describe('testing getTimeDifference method', () => {
     const testDateDiff = dateCalculator.getTimeDifference('1997-05-08', '2024-11-20', testOptions)
 
     expect(testDateDiff.w_d).toBe('')
+  })
+})
+
+describe('testing getTimeTravelDate method', () => {
+  const dateCalculator = new DateDifference()
+
+  it('should return 2022-05-26', () => {
+    const options = {
+      past: false,
+      years: 2,
+      months: 3,
+      weeks: 4,
+      days: 5,
+    }
+
+    expect(dateCalculator.getTimeTravelDate('2020-01-23', options)).toBe('2022-05-26')
+  })
+
+  it('should return 2019-09-20', () => {
+    const options = {
+      past: true,
+      years: 2,
+      months: 3,
+      weeks: 4,
+      days: 5,
+    }
+
+    expect(dateCalculator.getTimeTravelDate('2022-01-23', options)).toBe('2019-09-20')
   })
 })
