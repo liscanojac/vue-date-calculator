@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import type { DateDifferenceObject, DateOptions } from '@/interfaces/date-calculator'
-import { dateCalculator, DateDifference } from '@/services/date-calculator/dateDifference'
+import { dateCalculator } from '@/services/date-calculator-service/dateDifference'
 import { defineComponent, type PropType } from 'vue'
 
 export default defineComponent({

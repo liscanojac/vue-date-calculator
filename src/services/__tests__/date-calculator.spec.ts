@@ -1,6 +1,6 @@
 import { describe, expect, it, beforeEach } from 'vitest'
-import { DateDifferenceBase } from '../date-calculator/dateDifferenceBase'
-import { DateDifference } from '../date-calculator/dateDifference'
+import { DateDifferenceBase } from '../date-calculator-service/dateDifferenceBase'
+import { DateDifference } from '../date-calculator-service/dateDifference'
 
 const dateCalculatorBase = new DateDifferenceBase()
 
