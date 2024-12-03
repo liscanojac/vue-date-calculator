@@ -25,7 +25,7 @@
 import { defineComponent } from 'vue'
 import VueDatePicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
-import { dateCalculator } from '@/services/date-calculator-service/dateDifference'
+import { dateCalculator } from '@/services/date-calculator/src/date-calculator/dateDifference'
 
 export default defineComponent({
   name: 'DatePickerComponent',

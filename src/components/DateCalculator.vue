@@ -39,8 +39,8 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import type { DateOptions } from '@/interfaces/date-calculator'
-import { dateCalculator } from '@/services/date-calculator-service/dateDifference'
+import type { DateOptions } from '@/services/date-calculator/src/interfaces/date-calculator'
+import { dateCalculator } from '@/services/date-calculator/src/date-calculator/dateDifference'
 import OptionsPanel from './OptionsPanel.vue'
 import DateDifferenceDisplay from './DateDifferenceDisplay.vue'
 import DatePicker from './DatePicker.vue'
