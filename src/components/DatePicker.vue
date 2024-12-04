@@ -73,11 +73,7 @@ export default defineComponent({
   },
   methods: {
     formatDate(dateToFormat: string) {
-      const date = dateCalculator.getDate(dateToFormat)
-      const day = date.getUTCDate()
-      const month = date.getUTCMonth() + 1
-      const year = date.getUTCFullYear()
-      return `${day < 10 ? '0' + day : day}/${month < 10 ? '0' + month : month}/${year}`
+      return dateCalculator.getDateSlashFormat(dateToFormat)
     },
     handleModelUpdate(value: string | null) {
       this.$emit('update:dateModel', value === null ? '' : value)
@@ -95,7 +91,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-/* Add your styles here */
 .dp__theme_dark {
   --dp-background-color: var(--dark-blue);
   --dp-text-color: #fff;
