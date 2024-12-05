@@ -4,6 +4,7 @@
       <label
         for="quantity-input"
         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+        :class="labelClass"
         >{{ inputLabel }}</label
       >
       <div class="relative flex items-center max-w-[8rem]">
@@ -96,6 +97,10 @@ export default defineComponent({
       default: 0,
       required: false,
     },
+    labelClass: {
+      type: String,
+      required: false,
+    },
   },
   data() {
     return {}
@@ -108,6 +113,7 @@ export default defineComponent({
       const numericValue = Number(filteredValue)
 
       const valueToEmit = this.applyMinAndMax(numericValue)
+      input.value = valueToEmit.toString()
       this.$emit('update:numberValue', valueToEmit)
     },
     applyMinAndMax(value: number): number {
