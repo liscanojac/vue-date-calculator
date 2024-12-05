@@ -6,8 +6,11 @@
         :end-date="endDateCalculated"
         :date-difference="dateDifference"
         :date-options="dateOptions"
+        :date-travel="dateTravel"
+        :date-travel-options="dateTravelOptionsCalculated"
+        :going-future="goingFutureCalculated"
       />
-      <form action="submit" class="flex flex-col px-1" @submit.prevent="getDateDifference">
+      <form action="submit" class="flex flex-col px-1" @submit.prevent="handleCalculateBtn">
         <DatePicker
           v-model:date-model="startDate"
           :max-date="endDate"
@@ -40,7 +43,7 @@
           Calculate
         </button>
       </form>
-      <TimeTravelToggler v-model:time-travel="dateTravel" />
+      <TimeTravelToggler :time-travel="dateTravel" @update:time-travel="updateDateTravel" />
       <OptionsPanel
         v-if="!dateTravel"
         :date-options="dateOptions"
@@ -96,9 +99,16 @@ export default defineComponent({
         w_d: true,
         d: true,
       },
-      dateTravel: false,
+      dateTravel: true,
       goingFuture: true,
+      goingFutureCalculated: true,
       dateTravelOptions: {
+        years: 0,
+        months: 0,
+        weeks: 0,
+        days: 0,
+      },
+      dateTravelOptionsCalculated: {
         years: 0,
         months: 0,
         weeks: 0,
@@ -133,15 +143,22 @@ export default defineComponent({
 
   methods: {
     getDateDifference() {
-      if (this.btnEnabled) {
-        this.dateDifference = dateCalculator.getTimeDifference(
-          this.startDate,
-          this.endDate,
-          this.dateOptions,
-        )
-        this.startDateCalculated = this.startDate
-        this.endDateCalculated = this.endDate
-      }
+      this.dateDifference = dateCalculator.getTimeDifference(
+        this.startDate,
+        this.endDate,
+        this.dateOptions,
+      )
+      this.startDateCalculated = this.startDate
+      this.endDateCalculated = this.endDate
+    },
+    getDateTravel() {
+      this.endDateCalculated = dateCalculator.getTimeTravelDate(this.startDate, {
+        ...this.dateTravelOptions,
+        past: !this.goingFuture,
+      })
+      this.startDateCalculated = this.startDate
+      this.dateTravelOptionsCalculated = this.dateTravelOptions
+      this.goingFutureCalculated = this.goingFuture
     },
     dateDisplayEmpty(): boolean {
       return Object.values(this.dateDifference).join('') === ''
@@ -152,11 +169,52 @@ export default defineComponent({
         this.getDateDifference()
       }
     },
+    updateDateTravel(value: boolean) {
+      this.dateTravel = value
+      this.resetValues()
+    },
     updateDateTravelDirection(value: boolean) {
       this.goingFuture = value
     },
     updateDateTravelOptions(optionKey: keyof TimeTravelOptionsBase, value: boolean) {
       this.dateTravelOptions = { ...this.dateTravelOptions, [optionKey]: value }
+    },
+    handleCalculateBtn() {
+      if (this.btnEnabled) {
+        this.dateTravel ? this.getDateTravel() : this.getDateDifference()
+      }
+    },
+    resetValues() {
+      this.startDate = ''
+      this.endDate = ''
+      this.startDateCalculated = ''
+      this.endDateCalculated = ''
+      this.dateDifference = {
+        y_m_d: '',
+        m_d: '',
+        w_d: '',
+        d: '',
+      }
+      this.dateOptions = {
+        y_m_d: true,
+        m_d: true,
+        w_d: true,
+        d: true,
+      }
+      this.goingFuture = true
+      this.goingFutureCalculated = true
+      this.dateTravelOptions = {
+        years: 0,
+        months: 0,
+        weeks: 0,
+        days: 0,
+      }
+      this.dateTravelOptionsCalculated = {
+        years: 0,
+        months: 0,
+        weeks: 0,
+        days: 0,
+      }
     },
   },
 })
