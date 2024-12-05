@@ -1,22 +1,28 @@
 <template>
   <div>
-    <!-- Your template here -->
-    <OptionInput
-      :option-model="dateTravelDirection"
-      @update:option-model="$emit('update:goingFuture', $event)"
-    >
-      <template #left-label>
-        <label class="text-2xl mr-3">&minus;</label>
-      </template>
-      <template #right-label>
-        <label class="text-2xl ml-3">&plus;</label>
-      </template>
-    </OptionInput>
-    <div class="grid grid-cols-2">
-      <div v-for="(option, optionKey) in dateTravelOptions" :key="optionKey">
+    <div class="flex justify-center">
+      <OptionInput
+        :option-model="dateTravelDirection"
+        @update:option-model="$emit('update:goingFuture', $event)"
+      >
+        <template #left-label>
+          <label class="text-2xl mr-3">&minus;</label>
+        </template>
+        <template #right-label>
+          <label class="text-2xl ml-3">&plus;</label>
+        </template>
+      </OptionInput>
+    </div>
+    <div class="grid grid-cols-2 justify-items-center gap-4 my-3">
+      <div
+        class="flex items-center"
+        v-for="(option, optionKey) in dateTravelOptions"
+        :key="optionKey"
+      >
         <NumberInput
           :number-value="option"
           :input-label="optionKey"
+          label-class="capitalize text-center"
           :max-value="1000"
           @update:number-value="updateDateOption(optionKey, $event)"
         />
@@ -48,14 +54,10 @@ export default defineComponent({
     },
   },
   data() {
-    return {
-      // Define your data properties here
-    }
+    return {}
   },
   methods: {
     updateDateOption(optionKey: keyof TimeTravelOptionsBase, value: boolean) {
-      // const updatedOptions = { ...this.dateTravelOptions, [optionKey]: value }
-      // this.$emit('update:dateTravelOptions', updatedOptions)
       this.$emit('update:dateTravelOptions', optionKey, value)
     },
   },
