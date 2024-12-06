@@ -1,6 +1,6 @@
 <template>
   <div>
-    <form class="max-w-sm mx-auto">
+    <form class="mx-auto">
       <label for="small" class="block mb-2 text-sm font-medium">Select Mode:</label>
       <select
         id="small"
