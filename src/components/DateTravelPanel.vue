@@ -1,6 +1,7 @@
 <template>
   <div>
-    <div class="flex justify-center">
+    <div class="flex flex-col items-center">
+      <h3 class="my-1 font-medium text-sm">Add/Subtract from a Date</h3>
       <OptionInput
         :option-model="dateTravelDirection"
         @update:option-model="$emit('update:goingFuture', $event)"
