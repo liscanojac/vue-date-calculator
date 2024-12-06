@@ -1,14 +1,18 @@
 <template>
   <div class="flex justify-center items-center w-full px-4">
     <div class="w-full md:w-1/3">
+      <div>
+        <ModeSelector
+          :dark-mode="darkMode"
+          :date-travel="dateTravel"
+          @update:calculator-mode="updateDateTravel"
+        />
+      </div>
       <DateDifferenceDisplay
-        :start-date="startDateCalculated"
-        :end-date="endDateCalculated"
         :date-difference="dateDifference"
         :date-options="dateOptions"
         :date-travel="dateTravel"
-        :date-travel-options="dateTravelOptionsCalculated"
-        :going-future="goingFutureCalculated"
+        :calculated-data="calculated"
       />
       <form action="submit" class="flex flex-col px-1" @submit.prevent="handleCalculateBtn">
         <DatePicker
@@ -43,7 +47,6 @@
           Calculate
         </button>
       </form>
-      <TimeTravelToggler :time-travel="dateTravel" @update:time-travel="updateDateTravel" />
       <OptionsPanel
         v-if="!dateTravel"
         :date-options="dateOptions"
@@ -63,8 +66,8 @@ import { dateCalculator } from '@/services/date-calculator/src/date-calculator/d
 import OptionsPanel from './OptionsPanel.vue'
 import DateDifferenceDisplay from './DateDifferenceDisplay.vue'
 import DatePicker from './DatePicker.vue'
-import TimeTravelToggler from './TimeTravelToggler.vue'
 import DateTravelPanel from './DateTravelPanel.vue'
+import ModeSelector from './ModeSelector.vue'
 
 export default defineComponent({
   name: 'DateCalculatorComponent',
@@ -72,8 +75,8 @@ export default defineComponent({
     OptionsPanel,
     DateDifferenceDisplay,
     DatePicker,
-    TimeTravelToggler,
     DateTravelPanel,
+    ModeSelector,
   },
   props: {
     darkMode: {
@@ -85,8 +88,6 @@ export default defineComponent({
     return {
       startDate: '',
       endDate: '',
-      startDateCalculated: '',
-      endDateCalculated: '',
       dateDifference: {
         y_m_d: '',
         m_d: '',
@@ -99,21 +100,26 @@ export default defineComponent({
         w_d: true,
         d: true,
       },
-      dateTravel: true,
+      dateTravel: false,
       goingFuture: true,
-      goingFutureCalculated: true,
       dateTravelOptions: {
         years: 0,
         months: 0,
         weeks: 0,
         days: 0,
       },
-      dateTravelOptionsCalculated: {
-        years: 0,
-        months: 0,
-        weeks: 0,
-        days: 0,
+      calculated: {
+        startDate: '',
+        endDate: '',
+        goingFuture: true,
+        dateTravelOptions: {
+          years: 0,
+          months: 0,
+          weeks: 0,
+          days: 0,
+        },
       },
+      testVar: false,
     }
   },
   computed: {
@@ -148,17 +154,21 @@ export default defineComponent({
         this.endDate,
         this.dateOptions,
       )
-      this.startDateCalculated = this.startDate
-      this.endDateCalculated = this.endDate
+      this.calculated.startDate = this.startDate
+      this.calculated.endDate = this.endDate
     },
     getDateTravel() {
-      this.endDateCalculated = dateCalculator.getTimeTravelDate(this.startDate, {
+      const travelledDate = dateCalculator.getTimeTravelDate(this.startDate, {
         ...this.dateTravelOptions,
         past: !this.goingFuture,
       })
-      this.startDateCalculated = this.startDate
-      this.dateTravelOptionsCalculated = this.dateTravelOptions
-      this.goingFutureCalculated = this.goingFuture
+      this.calculated = {
+        ...this.calculated,
+        startDate: this.startDate,
+        endDate: travelledDate,
+        dateTravelOptions: this.dateTravelOptions,
+        goingFuture: this.goingFuture,
+      }
     },
     dateDisplayEmpty(): boolean {
       return Object.values(this.dateDifference).join('') === ''
@@ -187,8 +197,6 @@ export default defineComponent({
     resetValues() {
       this.startDate = ''
       this.endDate = ''
-      this.startDateCalculated = ''
-      this.endDateCalculated = ''
       this.dateDifference = {
         y_m_d: '',
         m_d: '',
@@ -202,18 +210,22 @@ export default defineComponent({
         d: true,
       }
       this.goingFuture = true
-      this.goingFutureCalculated = true
       this.dateTravelOptions = {
         years: 0,
         months: 0,
         weeks: 0,
         days: 0,
       }
-      this.dateTravelOptionsCalculated = {
-        years: 0,
-        months: 0,
-        weeks: 0,
-        days: 0,
+      this.calculated = {
+        startDate: '',
+        endDate: '',
+        goingFuture: true,
+        dateTravelOptions: {
+          years: 0,
+          months: 0,
+          weeks: 0,
+          days: 0,
+        },
       }
     },
   },
