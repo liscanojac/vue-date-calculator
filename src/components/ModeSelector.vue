@@ -1,9 +1,9 @@
 <template>
   <div>
     <form class="mx-auto">
-      <label for="small" class="block mb-2 text-sm font-medium">Select Mode:</label>
+      <label for="date-selector" class="block mb-2 text-sm font-medium">Select Mode:</label>
       <select
-        id="small"
+        id="date-selector"
         :value="dateTravel"
         @change="handleSelector"
         :class="[
