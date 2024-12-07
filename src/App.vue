@@ -11,14 +11,14 @@ const darkMode = ref(false)
 <template>
   <header class="flex items-center justify-around py-2 px-4">
     <img alt="Vue logo" class="h-10 w-10 md:h-12 md:w-12" src="./assets/logo.svg" />
-    <h1 class="text-xl md:text-2xl lg:text-3xl font-semibold">Vue Date Calculator</h1>
+    <h1 class="mx-3 text-xl md:text-2xl lg:text-3xl font-semibold">Vue Date Calculator</h1>
     <DarkModeInput v-model:dark-mode="darkMode" />
   </header>
   <main>
     <DateCalculator :dark-mode="darkMode" />
   </main>
   <footer class="absolute bottom-0 w-full">
-    <div class="grid items-center grid-cols-2 md:grid-cols-4 lg:grid-cols-7 py-4">
+    <div class="grid items-center grid-cols-2 md:grid-cols-4 lg:grid-cols-7 py-1 md:py-4">
       <div class="md:col-start-2 md:col-span-2 lg:col-start-3 lg:col-span-3">
         <div class="flex justify-center items-center">
           <h4 class="flex text-center">
