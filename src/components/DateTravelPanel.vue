@@ -24,7 +24,8 @@
           :number-value="option"
           :input-label="optionKey"
           label-class="capitalize text-center"
-          :max-value="1000"
+          :max-value="maxNumberInputValue"
+          :dark-mode="darkMode"
           @update:number-value="updateDateOption(optionKey, $event)"
         />
       </div>
@@ -53,9 +54,15 @@ export default defineComponent({
       type: Boolean,
       required: true,
     },
+    darkMode: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
-    return {}
+    return {
+      maxNumberInputValue: 1000,
+    }
   },
   methods: {
     updateDateOption(optionKey: keyof TimeTravelOptionsBase, value: boolean) {

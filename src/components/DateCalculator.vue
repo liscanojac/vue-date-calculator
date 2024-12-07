@@ -36,6 +36,7 @@
           v-if="dateTravel"
           :date-travel-options="dateTravelOptions"
           :date-travel-direction="goingFuture"
+          :dark-mode="darkMode"
           @update:going-future="updateDateTravelDirection"
           @update:date-travel-options="updateDateTravelOptions"
         />
