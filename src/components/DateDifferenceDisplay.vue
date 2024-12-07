@@ -19,7 +19,6 @@
 import type {
   DateDifferenceObject,
   DateOptions,
-  TimeTravelOptionsBase,
 } from '@/services/date-calculator/src/interfaces/date-calculator'
 import { dateCalculator } from '@/services/date-calculator/src/date-calculator/dateDifference'
 import { defineComponent, type PropType } from 'vue'
