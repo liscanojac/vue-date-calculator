@@ -3,7 +3,7 @@
     <form class="max-w-xs mx-auto">
       <label
         for="quantity-input"
-        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+        class="block mb-2 text-sm font-medium dark:text-white"
         :class="labelClass"
         >{{ inputLabel }}</label
       >
@@ -12,11 +12,15 @@
           type="button"
           id="decrement-button"
           data-input-counter-decrement="quantity-input"
-          class="bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 border border-gray-300 rounded-s-lg p-3 h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none"
+          :class="[
+            btnDefaultClasses,
+            'rounded-s-lg',
+            darkMode ? btnDarkModeClasses : btnLightModeClasses,
+          ]"
           @click="updateValue(numberValue - 1)"
         >
           <svg
-            class="w-3 h-3 text-gray-900 dark:text-white"
+            class="w-3 h-3"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -36,7 +40,7 @@
           id="quantity-input"
           data-input-counter
           aria-describedby="helper-text-explanation"
-          class="bg-gray-50 border-x-0 border-gray-300 h-11 text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full py-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          :class="[inputDefaultClasses, darkMode ? inputDarkModeClasses : inputLightModeClasses]"
           placeholder="999"
           required
           :value="numberValue"
@@ -46,11 +50,15 @@
           type="button"
           id="increment-button"
           data-input-counter-increment="quantity-input"
-          class="bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 border border-gray-300 rounded-e-lg p-3 h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none"
+          :class="[
+            btnDefaultClasses,
+            'rounded-e-lg',
+            darkMode ? btnDarkModeClasses : btnLightModeClasses,
+          ]"
           @click="updateValue(numberValue + 1)"
         >
           <svg
-            class="w-3 h-3 text-gray-900 dark:text-white"
+            class="w-3 h-3"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -101,9 +109,21 @@ export default defineComponent({
       type: String,
       required: false,
     },
+    darkMode: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
-    return {}
+    return {
+      btnDefaultClasses: 'border p-3 h-11 focus:ring-2 focus:outline-none',
+      btnLightModeClasses: 'bg-gray-100 hover:bg-gray-200 border-gray-300 focus:ring-gray-100',
+      btnDarkModeClasses: 'bg-dark-blue hover:bg-charcoal border-light-blue focus:ring-light-mint',
+      inputDefaultClasses:
+        'border-x-0 h-11 text-center text-sm focus:border-blue-500 block w-full py-2.5',
+      inputLightModeClasses: 'bg-gray-50 border-gray-300 focus:ring-primary-blue',
+      inputDarkModeClasses: 'bg-dark-blue border-light-blue',
+    }
   },
   methods: {
     filterNumbers(event: Event) {
