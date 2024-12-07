@@ -1,3 +1,5 @@
+import type { TimeTravelOptionsBase } from '@/services/date-calculator/src/interfaces/date-calculator'
+
 export interface toggleInputClasses {
   container?: string
   toggle?: string
@@ -11,4 +13,11 @@ export interface toggleInputClasses {
   handleOnDisabled?: string
   handleOffDisabled?: string
   label?: string
+}
+
+export interface CalculatedData {
+  startDate: string
+  endDate: string
+  goingFuture: boolean
+  dateTravelOptions: TimeTravelOptionsBase
 }

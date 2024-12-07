@@ -1,13 +1,20 @@
 <template>
   <div class="flex justify-center items-center w-full px-4">
     <div class="w-full md:w-1/3">
+      <div>
+        <ModeSelector
+          :dark-mode="darkMode"
+          :date-travel="dateTravel"
+          @update:calculator-mode="updateDateTravel"
+        />
+      </div>
       <DateDifferenceDisplay
-        :start-date="startDateCalculated"
-        :end-date="endDateCalculated"
         :date-difference="dateDifference"
         :date-options="dateOptions"
+        :date-travel="dateTravel"
+        :calculated-data="calculated"
       />
-      <form action="submit" class="flex flex-col px-1" @submit.prevent="getDateDifference">
+      <form action="submit" class="flex flex-col px-1" @submit.prevent="handleCalculateBtn">
         <DatePicker
           v-model:date-model="startDate"
           :max-date="endDate"
@@ -17,12 +24,21 @@
           :dark-mode="darkMode"
         />
         <DatePicker
+          v-if="!dateTravel"
           v-model:date-model="endDate"
           :min-date="startDate"
           placeholder="Select End Date"
-          :required="true"
+          :required="!dateTravel"
           :picking-same-date="false"
           :dark-mode="darkMode"
+        />
+        <DateTravelPanel
+          v-if="dateTravel"
+          :date-travel-options="dateTravelOptions"
+          :date-travel-direction="goingFuture"
+          :dark-mode="darkMode"
+          @update:going-future="updateDateTravelDirection"
+          @update:date-travel-options="updateDateTravelOptions"
         />
         <button
           type="submit"
@@ -32,18 +48,27 @@
           Calculate
         </button>
       </form>
-      <OptionsPanel :date-options="dateOptions" @update:date-options="updateDateOptions" />
+      <OptionsPanel
+        v-if="!dateTravel"
+        :date-options="dateOptions"
+        @update:date-options="updateDateOptions"
+      />
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import type { DateOptions } from '@/services/date-calculator/src/interfaces/date-calculator'
+import type {
+  DateOptions,
+  TimeTravelOptionsBase,
+} from '@/services/date-calculator/src/interfaces/date-calculator'
 import { dateCalculator } from '@/services/date-calculator/src/date-calculator/dateDifference'
 import OptionsPanel from './OptionsPanel.vue'
 import DateDifferenceDisplay from './DateDifferenceDisplay.vue'
 import DatePicker from './DatePicker.vue'
+import DateTravelPanel from './DateTravelPanel.vue'
+import ModeSelector from './ModeSelector.vue'
 
 export default defineComponent({
   name: 'DateCalculatorComponent',
@@ -51,6 +76,8 @@ export default defineComponent({
     OptionsPanel,
     DateDifferenceDisplay,
     DatePicker,
+    DateTravelPanel,
+    ModeSelector,
   },
   props: {
     darkMode: {
@@ -62,8 +89,6 @@ export default defineComponent({
     return {
       startDate: '',
       endDate: '',
-      startDateCalculated: '',
-      endDateCalculated: '',
       dateDifference: {
         y_m_d: '',
         m_d: '',
@@ -76,10 +101,33 @@ export default defineComponent({
         w_d: true,
         d: true,
       },
+      dateTravel: false,
+      goingFuture: true,
+      dateTravelOptions: {
+        years: 0,
+        months: 0,
+        weeks: 0,
+        days: 0,
+      },
+      calculated: {
+        startDate: '',
+        endDate: '',
+        goingFuture: true,
+        dateTravelOptions: {
+          years: 0,
+          months: 0,
+          weeks: 0,
+          days: 0,
+        },
+      },
+      testVar: false,
     }
   },
   computed: {
     btnEnabled(): boolean {
+      return this.dateTravel ? this.dateTravelEnabled : this.bothDatesEnabled
+    },
+    bothDatesEnabled() {
       return (
         !!this.startDate &&
         !!this.endDate &&
@@ -89,18 +137,38 @@ export default defineComponent({
           this.dateOptions.y_m_d)
       )
     },
+    dateTravelEnabled() {
+      return (
+        !!this.startDate &&
+        (!!this.dateTravelOptions.years ||
+          !!this.dateTravelOptions.months ||
+          !!this.dateTravelOptions.weeks ||
+          !!this.dateTravelOptions.days)
+      )
+    },
   },
 
   methods: {
     getDateDifference() {
-      if (this.btnEnabled) {
-        this.dateDifference = dateCalculator.getTimeDifference(
-          this.startDate,
-          this.endDate,
-          this.dateOptions,
-        )
-        this.startDateCalculated = this.startDate
-        this.endDateCalculated = this.endDate
+      this.dateDifference = dateCalculator.getTimeDifference(
+        this.startDate,
+        this.endDate,
+        this.dateOptions,
+      )
+      this.calculated.startDate = this.startDate
+      this.calculated.endDate = this.endDate
+    },
+    getDateTravel() {
+      const travelledDate = dateCalculator.getTimeTravelDate(this.startDate, {
+        ...this.dateTravelOptions,
+        past: !this.goingFuture,
+      })
+      this.calculated = {
+        ...this.calculated,
+        startDate: this.startDate,
+        endDate: travelledDate,
+        dateTravelOptions: this.dateTravelOptions,
+        goingFuture: this.goingFuture,
       }
     },
     dateDisplayEmpty(): boolean {
@@ -110,6 +178,55 @@ export default defineComponent({
       this.dateOptions = { ...this.dateOptions, [key]: value }
       if (!this.dateDisplayEmpty()) {
         this.getDateDifference()
+      }
+    },
+    updateDateTravel(value: boolean) {
+      this.dateTravel = value
+      this.resetValues()
+    },
+    updateDateTravelDirection(value: boolean) {
+      this.goingFuture = value
+    },
+    updateDateTravelOptions(optionKey: keyof TimeTravelOptionsBase, value: boolean) {
+      this.dateTravelOptions = { ...this.dateTravelOptions, [optionKey]: value }
+    },
+    handleCalculateBtn() {
+      if (this.btnEnabled) {
+        this.dateTravel ? this.getDateTravel() : this.getDateDifference()
+      }
+    },
+    resetValues() {
+      this.startDate = ''
+      this.endDate = ''
+      this.dateDifference = {
+        y_m_d: '',
+        m_d: '',
+        w_d: '',
+        d: '',
+      }
+      this.dateOptions = {
+        y_m_d: true,
+        m_d: true,
+        w_d: true,
+        d: true,
+      }
+      this.goingFuture = true
+      this.dateTravelOptions = {
+        years: 0,
+        months: 0,
+        weeks: 0,
+        days: 0,
+      }
+      this.calculated = {
+        startDate: '',
+        endDate: '',
+        goingFuture: true,
+        dateTravelOptions: {
+          years: 0,
+          months: 0,
+          weeks: 0,
+          days: 0,
+        },
       }
     },
   },

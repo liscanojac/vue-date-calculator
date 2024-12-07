@@ -38,7 +38,7 @@ export default defineComponent({
     return {
       toggleClassesDefault: {
         container:
-          'inline-block rounded-full outline-none focus:ring focus:ring-light-mint focus:ring-opacity-30',
+          'inline-block rounded-full outline-none focus:ring focus:ring-light-mint focus:ring-opacity-50',
         toggle:
           'flex w-12 h-5 rounded-full relative cursor-pointer transition items-center box-content border-2 text-xs leading-none',
         toggleOn: 'bg-primary-mint border-primary-mint',
