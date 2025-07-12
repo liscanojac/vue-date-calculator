@@ -192,7 +192,11 @@ export default defineComponent({
     },
     handleCalculateBtn() {
       if (this.btnEnabled) {
-        this.dateTravel ? this.getDateTravel() : this.getDateDifference()
+        if (this.dateTravel) {
+          this.getDateTravel()
+        } else {
+          this.getDateDifference()
+        }
       }
     },
     resetValues() {
