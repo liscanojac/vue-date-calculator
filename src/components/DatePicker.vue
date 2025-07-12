@@ -72,8 +72,9 @@ export default defineComponent({
     }
   },
   methods: {
-    formatDate(dateToFormat: string) {
-      return dateCalculator.getDateSlashFormat(dateToFormat)
+    formatDate(dateToFormat: Date) {
+      const dateString = dateToFormat.toISOString()
+      return dateCalculator.getDateSlashFormat(dateString)
     },
     handleModelUpdate(value: string | null) {
       this.$emit('update:dateModel', value === null ? '' : value)
