@@ -38,10 +38,10 @@
     "postcss": "^8.4.49",
     "prettier": "^3.3.3",
     "tailwindcss": "^3.4.15",
-    "typescript": "~5.6.3",
+    "typescript": "^5.8.3",
     "vite": "^6.3.5",
     "vite-plugin-vue-devtools": "^7.5.4",
     "vitest": "^3.2.0",
-    "vue-tsc": "^2.1.10"
+    "vue-tsc": "^3.0.1"
   }
 }
